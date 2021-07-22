@@ -1,0 +1,95 @@
+export const  Users = [
+    {
+        id:1,
+        profilePicture:"person/1.jpg",
+        username:"陳慕真",
+    },
+    {
+        id:2,
+        profilePicture:"person/2.jpg",
+        username:"林士淵",
+    },
+    {
+        id:3,
+        profilePicture:"person/3.jpg",
+        username:"梁呈瑋",
+    },
+    {
+        id:4,
+        profilePicture:"person/4.jpg",
+        username:"劉承揚",
+    },
+    {
+        id:5,
+        profilePicture:"person/5.jpg",
+        username:"蕭心玫",
+    },
+    {
+        id:7,
+        profilePicture:"person/7.jpg",
+        username:"陳亮均",
+    },
+    {
+        id:8,
+        profilePicture:"person/8.jpg",
+        username:"楊均富",
+    },
+    {
+        id:9,
+        profilePicture:"person/9.jpg",
+        username:"李培安",
+    },
+    {
+        id:10,
+        profilePicture:"person/10.jpg",
+        username:"游旻昌",
+    },
+];
+
+export const Posts = [
+    {
+        id:1,
+        desc:"愛上霸道總裁昌哥",
+        photo:"post/1.webp",
+        date:"5 mins ago",
+        userId:1,
+        like:32,
+        comment:9,
+    },
+    {
+        id:2,
+        desc:"第一次發文大家不要生氣",
+        photo:"post/2.jpg",
+        date:"15 mins ago",
+        userId:2,
+        like:2,
+        comment:1,
+    },
+    {
+        id:3,
+        desc:"昌哥好帥",
+        photo:"post/3.jpg",
+        date:"20 mins ago",
+        userId:3,
+        like:100,
+        comment:15,
+    },
+    {
+        id:4,
+        desc:"媽的圖文不符",
+        photo:"post/4.jpg",
+        date:"5 mins ago",
+        userId:4,
+        like:10,
+        comment:5,
+    },
+    {
+        id:5,
+        desc:"昌哥什麼時候要去玩",
+        photo:"post/5.jpg",
+        date:"5 mins ago",
+        userId:5,
+        like:30,
+        comment:8,
+    },
+];

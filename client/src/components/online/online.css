@@ -1,0 +1,24 @@
+.rightbarFirendList{
+    padding: 0; /*當用ui li的時候要把padding跟margin社成0 因為他自己有預設*/
+    margin: 0;
+
+}
+
+.rightbarFriend{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.rightbarOnline{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: limegreen;
+    position: absolute;
+    top:-2px;
+    right:1.5px;
+    border:2px solid white;
+}
+.rightbarUsername{
+    font-weight: 500;
+}
