@@ -34,13 +34,12 @@ export default function Share() {
                 },
                 body: form 
                 }).then(data=>data.json().then(data=>{
-                    newpost = {
+                    console.log(newpost)
+                    axios.post("/api/posts",{
                         userId: user._id,
                         desc: desc.current.value,
                         image: data.data.link
-                    }
-                    console.log(newpost)
-                    axios.post("/api/posts",newpost)
+                    })
                 }))
             }
             
