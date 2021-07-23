@@ -18,11 +18,12 @@ export default function Share() {
             desc: desc.current.value
         }
         const form = new FormData()
+        console.log(file)
         form.append("image",file)
         console.log(form) //test
         try{
             //
-            if(form===null){
+            if(file===null){
                 console.log("沒圖片")
                 axios.post("/api/posts",newPost)
                 //直接上傳
@@ -34,6 +35,7 @@ export default function Share() {
                 },
                 body: form 
                 }).then(data=>data.json().then(data=>{
+                    console.log(data.data.link)
                     axios.post("/api/posts",{
                         userId: user._id,
                         desc: desc.current.value,
