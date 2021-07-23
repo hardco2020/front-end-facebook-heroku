@@ -34,7 +34,6 @@ export default function Share() {
                 },
                 body: form 
                 }).then(data=>data.json().then(data=>{
-                    console.log(newpost)
                     axios.post("/api/posts",{
                         userId: user._id,
                         desc: desc.current.value,
@@ -46,7 +45,7 @@ export default function Share() {
             //window.location.reload()
             
         }catch(err){
-            console.log
+            console.log(err)
         }
     }
     return (
