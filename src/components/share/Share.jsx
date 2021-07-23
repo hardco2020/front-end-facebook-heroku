@@ -35,8 +35,8 @@ export default function Share() {
                 body: form 
                 }).then(data=>data.json().then(data=>{
                     newpost = {
-                        userId: user._id
-                        desc: desc.current.value
+                        userId: user._id,
+                        desc: desc.current.value,
                         image: data.data.link
                     }
                     console.log(newpost)
