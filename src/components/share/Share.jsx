@@ -21,7 +21,6 @@ export default function Share() {
         form.append("image",file)
         try{
             axios.post("/api/posts",newPost)
-            window.location.reload()
             fetch("https://api.imgur.com/3/image/",{
                 method:"post",
                 headers:{
@@ -31,6 +30,8 @@ export default function Share() {
             }).then(data=>data.json().then(data=>{
                 console.log(data.data.link)
             }))
+            //window.location.reload()
+            
         }catch(err){
 
         }
