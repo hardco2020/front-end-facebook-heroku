@@ -31,11 +31,11 @@ export default function Profile() {
             <div className="profileRight">
                 <div className="profileRightTop">
                     <div className="profileCover">
-                        <img src={ user.coverPicture ? PF+user.coverPicture : PF+"post/2.jpg"}
+                        <img src={ user.coverPicture ? PF+user.coverPicture : "https://i.imgur.com/kM5r80s.jpg"}
                              alt="" 
                              className="profileCoverImg" 
                         />
-                        <img src={ user.profilePicture? PF+user.profilePicture :PF+"noAvatar.png"}
+                        <img src={ user.profilePicture? PF+user.profilePicture :"https://i.imgur.com/HeIi0wU.png"}
                              alt="" 
                              className="profileUserImg" 
                         />

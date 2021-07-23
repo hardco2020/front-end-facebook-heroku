@@ -39,7 +39,7 @@ export default function Share() {
         <div className="share">
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img className="shareProfileImg" src= {user.profilePicture ? PF+user.profilePicture : PF+"noAvatar.png"}alt=""/>
+                    <img className="shareProfileImg" src= {user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"}alt=""/>
                     <input 
                         placeholder={"你最近在想什麼? "+ user.username}
                         className="shareInput"

@@ -57,7 +57,7 @@ export default function Post({post}) {
                      <div className="postTopLeft">
                          <Link to={`/profile/${user.username}`}>
                          
-                         <img src={user.profilePicture ? PF+user.profilePicture : PF+"noAvatar.png"}
+                         <img src={user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
                               alt="" 
                               className="postProfileImg"   
                          />
@@ -77,8 +77,8 @@ export default function Post({post}) {
                  </div>
                  <div className="postBottom">
                      <div className="postBottomLeft">
-                         <img className="likeIcon" src={`${PF}like1.png`} onClick={likeHandler} alt=""/>
-                         <img className="likeIcon" src={`${PF}heart2.png`} onClick={likeHandler} alt=""/>
+                         <img className="likeIcon" src={"https://i.imgur.com/5OV5nFE.png"} onClick={likeHandler} alt=""/>
+                         <img className="likeIcon" src={"https://i.imgur.com/a5QV3sX.png"} onClick={likeHandler} alt=""/>
                          <span className="postLikeCounter">{like}個喜歡</span>
                      </div>
                      <div className="postBottomRight">

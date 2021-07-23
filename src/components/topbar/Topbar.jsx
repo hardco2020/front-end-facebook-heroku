@@ -51,7 +51,7 @@ export default function Topbar(){
                     </div> 
                 </div>
                 <Link to={`/profile/${user.username}`}> 
-                <img src={user.profilePicture ? PF+user.profilePicture : PF+"noAvatar.png"} alt="" className="topbarImg" />
+                <img src={user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
                 </Link>
                 <div className="topbarIconItem">
                         <ExitToApp/>
