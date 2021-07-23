@@ -40,7 +40,7 @@ export default function Share() {
                         image: data.data.link
                     }
                     console.log(newpost)
-                    await axios.post("/api/posts",newpost)
+                    axios.post("/api/posts",newpost)
                 }))
             }
             
