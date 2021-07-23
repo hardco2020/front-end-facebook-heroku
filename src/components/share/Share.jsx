@@ -21,8 +21,8 @@ export default function Share() {
         form.append("image",file)
         console.log(form)
         try{
-            axios.post("/api/posts",newPost)
-            window.location.reload()
+            //axios.post("/api/posts",newPost)
+            //window.location.reload()
             fetch("https://api.imgur.com/3/image/",{
                 method:"post",
                 headers:{
