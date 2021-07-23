@@ -18,36 +18,27 @@ export default function Share() {
             desc: desc.current.value
         }
         const form = new FormData()
-        console.log(file)
         form.append("image",file)
-        console.log(form) //test
+        console.log(form)
         try{
-            //
-            if(file===null){
-                console.log("沒圖片")
-                axios.post("/api/posts",newPost)
-                //直接上傳
-            }else{
-                fetch("https://api.imgur.com/3/image",{
+            axios.post("/api/posts",newPost)
+            window.location.reload()
+            fetch("https://api.imgur.com/3/image/",{
                 method:"post",
                 headers:{
                     Authorization:"Client-ID 9235f4e0c03ab68" 
-                },
-                body: form 
-                }).then(data=>data.json().then(data=>{
-                    console.log(data.data.link)
-                    axios.post("/api/posts",{
-                        userId: user._id,
-                        desc: desc.current.value,
-                        image: data.data.link
-                    })
-                }))
-            }
-            
-            //window.location.reload()
-            
+                }
+                ,body:form
+            }).then(data=>data.json().then(data=>{
+                console.log(data.data.link)
+                axios.post("/api/posts",{
+                    userId: user._id,
+                    desc: desc.current.value,
+                    image: data.data.link
+                })
+            }))
         }catch(err){
-            console.log(err)
+
         }
     }
     return (
