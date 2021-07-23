@@ -22,15 +22,15 @@ export default function Share() {
         try{
             axios.post("/api/posts",newPost)
             window.location.reload()
-            // fetch("https://api.imgur.com/3/image/",{
-            //     method:"post",
-            //     headers:{
-            //         Authorization:"Client-ID 9235f4e0c03ab68" 
-            //     }
-            //     ,body:form
-            // }).then(data=>data.json().then(data=>{
-            //     console.log(data.data.link)
-            // }))
+            fetch("https://api.imgur.com/3/image/",{
+                method:"post",
+                headers:{
+                    Authorization:"Client-ID 9235f4e0c03ab68" 
+                }
+                ,body:form
+            }).then(data=>data.json().then(data=>{
+                console.log(data.data.link)
+            }))
         }catch(err){
 
         }
