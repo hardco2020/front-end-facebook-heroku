@@ -19,27 +19,32 @@ export default function Share() {
         }
         const form = new FormData()
         form.append("image",file)
-        if(file!==null){
-            console.log("no pic")
-        }
+        
         console.log(form)
         try{
-            //axios.post("/api/posts",newPost)
-            //window.location.reload()
-            fetch("https://api.imgur.com/3/image/",{
-                method:"post",
-                headers:{
-                    Authorization:"Client-ID 9235f4e0c03ab68" 
-                }
-                ,body:form
-            }).then(data=>data.json().then(data=>{
-                console.log(data.data.link)
-                axios.post("/api/posts",{
-                    userId: user._id,
-                    desc: desc.current.value,
-                    img: data.data.link
-                })
-            }))
+            if(file!==null){
+                console.log("yespic")
+                //axios.post("/api/posts",newPost)
+                //window.location.reload()
+                fetch("https://api.imgur.com/3/image/",{
+                    method:"post",
+                    headers:{
+                        Authorization:"Client-ID 9235f4e0c03ab68" 
+                    }
+                    ,body:form
+                }).then(data=>data.json().then(data=>{
+                    console.log(data.data.link)
+                    axios.post("/api/posts",{
+                        userId: user._id,
+                        desc: desc.current.value,
+                        img: data.data.link
+                    })
+                }))
+            }
+            else{
+                axios.post("/api/posts",newPost)
+            }
+            
         }catch(err){
 
         }
