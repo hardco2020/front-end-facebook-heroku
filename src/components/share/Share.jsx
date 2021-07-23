@@ -19,6 +19,9 @@ export default function Share() {
         }
         const form = new FormData()
         form.append("image",file)
+        if(file!==null){
+            console.log("no pic")
+        }
         console.log(form)
         try{
             //axios.post("/api/posts",newPost)
@@ -34,7 +37,7 @@ export default function Share() {
                 axios.post("/api/posts",{
                     userId: user._id,
                     desc: desc.current.value,
-                    image: data.data.link
+                    img: data.data.link
                 })
             }))
         }catch(err){
