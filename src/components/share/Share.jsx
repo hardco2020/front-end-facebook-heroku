@@ -17,8 +17,8 @@ export default function Share() {
             userId: user._id,
             desc: desc.current.value
         }
-        //const form = new FormData()
-        //form.append("image",file)
+        const form = new FormData()
+        form.append("image",file)
         try{
             axios.post("/api/posts",newPost)
             window.location.reload()
