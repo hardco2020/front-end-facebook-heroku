@@ -19,21 +19,35 @@ export default function Share() {
         }
         const form = new FormData()
         form.append("image",file)
+        console.log(form) //test
         try{
-            axios.post("/api/posts",newPost)
-            fetch("https://api.imgur.com/3/image/",{
+            //
+            if(form===null){
+                console.log("沒圖片")
+                axios.post("/api/posts",newPost)
+                //直接上傳
+            }else{
+                fetch("https://api.imgur.com/3/image",{
                 method:"post",
                 headers:{
                     Authorization:"Client-ID 9235f4e0c03ab68" 
-                }
-                ,body:form
-            }).then(data=>data.json().then(data=>{
-                console.log(data.data.link)
-            }))
+                },
+                body: form 
+                }).then(data=>data.json().then(data=>{
+                    newpost = {
+                        userId: user._id
+                        desc: desc.current.value
+                        image: data.data.link
+                    }
+                    console.log(newpost)
+                    await axios.post("/api/posts",newpost)
+                }))
+            }
+            
             //window.location.reload()
             
         }catch(err){
-
+            console.log
         }
     }
     return (
