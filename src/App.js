@@ -9,8 +9,6 @@ import{
   Redirect
 } from 'react-router-dom'
 import axios from 'axios';
-import { AuthContext } from './context/AuthContext';
-import { useContext } from 'react';
 function App() {
   const user = JSON.parse(localStorage.getItem("user"))
   const token = localStorage.getItem("token")

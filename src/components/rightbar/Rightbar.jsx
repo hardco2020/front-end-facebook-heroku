@@ -2,20 +2,19 @@
 import './rightbar.css'
 import { Users } from '../../dummyData'
 import Online from '../online/Online'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link, useHistory } from 'react-router-dom'
-import { AuthContext } from '../../context/AuthContext'
+import { Link} from 'react-router-dom'
 import { Add, Remove } from '@material-ui/icons'
 
 export default function Rightbar({user}) {
     
-    let history = useHistory();
+    //let history = useHistory();
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const [friends,setFriends] = useState([])
     const currentUser = JSON.parse(localStorage.getItem("user"))  
-    console.log(currentUser)
-    const {dispatch,user:contextuser} = useContext(AuthContext)
+    //console.log(currentUser)
+    //const {dispatch,user:contextuser} = useContext(AuthContext)
     //此處是使用localstorage去做確認 等於說如果做更新了 要直接去修改裡面的資料
     const [followed,setFollowed] = useState(currentUser.followings.includes(user?._id))
     useEffect(()=>{

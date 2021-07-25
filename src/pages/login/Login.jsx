@@ -3,9 +3,7 @@ import { useContext,useRef } from "react"
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress} from "@material-ui/core"
-import { useHistory } from "react-router-dom";
 export default function Login() {
-    let history = useHistory()
     //也可以用useState但會影響效能
     const email = useRef();
     const password = useRef();

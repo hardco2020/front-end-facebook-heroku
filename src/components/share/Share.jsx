@@ -1,7 +1,6 @@
 import './share.css'
-import {PermMedia,Label,Room,EmojiEmotions, LaptopWindows, Cancel}  from '@material-ui/icons'
-import { useContext, useState,useEffect, useRef } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import {PermMedia,Label,Room,EmojiEmotions,Cancel}  from '@material-ui/icons'
+import { useState, useRef } from 'react'
 import axios from 'axios'
 export default function Share() {
     const user = JSON.parse(localStorage.getItem("user"))
