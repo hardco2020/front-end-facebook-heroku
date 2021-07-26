@@ -71,17 +71,17 @@ export default function Profile() {
         currentUser.relationship = relationship.current.value
         currentUser.desc = desc.current.value
         console.log(currentUser)
-        //localStorage.setItem("user",JSON.stringify(currentUser))
-        const update = {
-            city:city.current.value,
-            from:country.current.value,
-            desc: desc.current.value,
-            relationship:relationship.current.value
-        }
-        console.log(update)
+        localStorage.setItem("user",JSON.stringify(currentUser))
+        // const update = {
+        //     city:city.current.value,
+        //     from:country.current.value,
+        //     desc: desc.current.value,
+        //     relationship:relationship.current.value
+        // }
+        // console.log(update)
         //更新遠端
-        // const updateResult = await axios.put('/api/users/',update)
-        // console.log(updateResult)
+        const updateResult = await axios.put('/api/users/',currentUser)
+        console.log(updateResult)
     }
 
 
