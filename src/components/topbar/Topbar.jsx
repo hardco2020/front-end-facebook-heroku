@@ -1,35 +1,54 @@
 import "./topbar.css"
 import { Search,Person,Chat,Notifications,ExitToApp} from "@material-ui/icons"
-import { MenuItem } from "@material-ui/core";
+import { MenuItem,CircularProgress} from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom"
 import { useState } from "react";
 import axios from "axios";
-import AsyncSelect from "react-async-select";
 import { useEffect } from "react";
+import { useRef } from "react";
 export default function Topbar(){
     let history = useHistory();
     //const [member,setMember] = useState({});
     const [search, setSearch] = useState("");
     const [display,setDisplay] = useState(false);
     const [results,setResults] = useState([]);
+    const [searching,setSearching] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"))
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER
+    const wrapperRef = useRef(null) //利用此點判斷滑鼠的落點區域
+
+    //判斷搜尋欄開關
+    useEffect(()=>{
+        document.addEventListener('mousedown',handleClickOuteside)
+        return ()=>{
+            document.removeEventListener('mousedown',handleClickOuteside)
+        };
+    },[]);
+
+    const handleClickOuteside = event =>{
+        const {current:wrap} = wrapperRef;
+        if (wrap&& !wrap.contains(event.target)){
+            setDisplay(false);
+        }
+    }
+
     const signout = () =>{
         localStorage.clear();
         history.push('/login')
         window.location.reload()
     }
-    console.log(results)
     //console.log(member.city)
     //透過user token在對遠端做要求
     useEffect(()=>{
+        setSearching(true)
         const searching = async()=>{
             try{
                 const searchResult = await axios.get('api/users/search/'+search)
                 setResults(searchResult.data.data)
-
+                setSearching(false)
             }catch(err){
                 console.log(err)
+                setSearching(false)
+                setResults([])
             }
         };
         searching()
@@ -42,7 +61,7 @@ export default function Topbar(){
                 <span className="logo">HardCo.Social</span>
                 </Link>
             </div>
-            <div className="topbarCenter">
+            <div className="topbarCenter" ref={wrapperRef}>
                 <div className="searchbar">
 
                     <Search className="searchIcon" />
@@ -50,12 +69,12 @@ export default function Topbar(){
                         placeholder="尋找朋友、貼文或影片"
                         className="searchInput"
                         onChange={(e)=>setSearch(e.target.value)}
-                        onFocus ={()=>setDisplay(true)}
-                        onBlur ={()=>setDisplay(false)}
+                        onClick ={()=>setDisplay(!display)}
                     />
                 </div>
-                {/* {display &&( */}
+                {display &&(
                     <div className="autoContainer">
+
                         {results.map((value)=>{
                             return(
                                 <Link to={`/profile/${value.username}`} style={{textDecoration:"none",color: "inherit" }}>
@@ -67,8 +86,10 @@ export default function Topbar(){
                                 
                             )
                         })}
+                            {searching? <div className="onSearch"><CircularProgress color="gray" size="30px"/> </div>: null}
                     </div>
-                {/* )}  */}
+                 )}  
+                
             </div>
             <div className="topbarRight">
                 <div className="topbarLinks">
@@ -90,7 +111,7 @@ export default function Topbar(){
                     </div>
                 </div>
                 <Link to={`/profile/${user.username}`}>
-                <img src={user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
+                <img src={user.profilePicture ? user.profilePicture : "https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
                 </Link>
                 <div className="topbarIconItem">
                         <ExitToApp/>

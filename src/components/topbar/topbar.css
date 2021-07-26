@@ -23,7 +23,10 @@
 }
 .topbarCenter{
     flex:4;
+    display: flex;
+    flex-direction: column;
     border-radius:10px;
+    position: relative;
 }
 .searchbar{
     width:100%;
@@ -38,7 +41,7 @@
 .searchIcon{
     /* 因為他原先是material icon有內建css 必須用important來覆蓋其stlye屬性 */
     font-size:25px !important; 
-    margin-left: 15px;
+    margin-left: 20px;
 }
 .searchInput{    
     /* 去除掉邊界 */
@@ -46,10 +49,22 @@
     width:100%;
 }
 .autoContainer{
+    position: absolute;
+    top: 30%;
+    left: 0;
     background-color: white;
-    position: relative;
     -webkit-box-shadow: 0px 0px 16px -8px rgba(0,0,0,0.68); 
     box-shadow: 0px 0px 16px -8px rgba(0,0,0,0.68);
+    width:100%;
+    margin-top: 20px;
+    align-items: center;
+    overflow-y: auto;
+}
+.onSearch{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 
@@ -78,6 +93,9 @@
     cursor:pointer;
     /* badge到時候會是absolute 所以可以根據item去調配這些badge */
     position: relative;
+    align-items: center;
+    display: flex;
+    justify-self: center;
 }
 .topbarIconBadge{
     width:15px;
