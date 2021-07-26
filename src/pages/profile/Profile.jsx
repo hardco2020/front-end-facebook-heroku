@@ -41,9 +41,8 @@ export default function Profile() {
                     Authorization:"Client-ID 9235f4e0c03ab68" 
                 }
                 ,body:form
-                })
-            console.log(url.json())
-            profileUrl = url.json()
+                }).then(data=>data.json())
+            profileUrl = url
         }
         if(editCover===null || editCover===undefined){
             console.log("沒換封面")
@@ -56,17 +55,23 @@ export default function Profile() {
                     Authorization:"Client-ID 9235f4e0c03ab68" 
                 }
                 ,body:form
-                })
-            coverUrl = url.json()
+                }).then(data=>data.json())
+            coverUrl = url
         }
         //更新本地資訊
         console.log(coverUrl,profileUrl)
+        if(coverUrl.data.link!==null){
+            currentUser.coverPicture = coverUrl.data.link
+        }
+        if(profileUrl.data.link!==null){
+            currentUser.profilePicture = profileUrl.data.link
+        } 
         currentUser.from = country.current.value
         currentUser.city = city.current.value
         currentUser.relationship = relationship.current.value
         currentUser.desc = desc.current.value
         console.log(currentUser)
-        localStorage.setItem("user",JSON.stringify(currentUser))
+        //localStorage.setItem("user",JSON.stringify(currentUser))
         const update = {
             city:city.current.value,
             from:country.current.value,
@@ -75,8 +80,8 @@ export default function Profile() {
         }
         console.log(update)
         //更新遠端
-        const updateResult = await axios.put('/api/users/',update)
-        console.log(updateResult)
+        // const updateResult = await axios.put('/api/users/',update)
+        // console.log(updateResult)
     }
 
 
