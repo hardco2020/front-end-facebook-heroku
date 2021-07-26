@@ -10,7 +10,6 @@ import { Add, Remove } from '@material-ui/icons'
 export default function Rightbar({user}) {
     
     //let history = useHistory();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const [friends,setFriends] = useState([])
     const currentUser = JSON.parse(localStorage.getItem("user"))  
     //console.log(currentUser)
@@ -21,7 +20,7 @@ export default function Rightbar({user}) {
        setFollowed(currentUser.followings.includes(user?._id))
     },[currentUser,user?._id])
     useEffect(()=>{
-        console.log(user?._id)
+        //console.log(user?._id)
         const getFriends = async()=>{
             try{
                 const friendList = await axios.get('/api/users/friends/'+ user?._id)
@@ -102,13 +101,13 @@ export default function Rightbar({user}) {
                 <h4 className="rightbarTitle">他的朋友</h4>
                 <div className="rightbarFollowings">
                     {friends.map((friend)=>(
-                    <Link to={"/profile/"+friend.username} style={{textDecoration:"none"}}>
+                    <Link to={"/profile/"+friend.username} style={{textDecoration:"none"}} key={friend.username}>
                     <div className="rightbarFollowing">
                         <img 
                             src={
                             friend.profilePicture 
-                            ? PF+friend.profilePicture 
-                            : PF+"noAvatar.png"} 
+                            ? friend.profilePicture 
+                            : "https://i.imgur.com/HeIi0wU.png"} 
                             alt="" 
                             className="rightbarFollowingImg" 
                         />

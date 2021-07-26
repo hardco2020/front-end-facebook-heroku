@@ -4,7 +4,6 @@ import { useState, useRef } from 'react'
 import axios from 'axios'
 export default function Share() {
     const user = JSON.parse(localStorage.getItem("user"))
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const [file,setFile] = useState(null);
     const desc = useRef()
     //upload img to server不是好的主意
@@ -52,7 +51,7 @@ export default function Share() {
         <div className="share">
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img className="shareProfileImg" src= {user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"}alt=""/>
+                <img src={ user.profilePicture? user.profilePicture : "https://i.imgur.com/HeIi0wU.png" } alt=""  className="shareProfileImg" />
                     <input 
                         placeholder={"你最近在想什麼? "+ user.username}
                         className="shareInput"

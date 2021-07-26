@@ -9,7 +9,6 @@ export default function Post({post}) {
     const [user,setUser] = useState({});
     const [like,setLike] = useState(post.likes.length)
     const [isLiked,setIsLiked] = useState(false)
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;//assets
     const currentUser = JSON.parse(localStorage.getItem("user"))
     //const {user:currentUser} = useContext(AuthContext)
     //console.log(token)
@@ -56,7 +55,7 @@ export default function Post({post}) {
                      <div className="postTopLeft">
                          <Link to={`/profile/${user.username}`}>
                          
-                         <img src={user.profilePicture ? PF+user.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
+                         <img src={user.profilePicture ? user.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
                               alt="" 
                               className="postProfileImg"   
                          />
