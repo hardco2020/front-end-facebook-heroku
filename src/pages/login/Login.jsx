@@ -3,6 +3,7 @@ import { useContext,useRef } from "react"
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress} from "@material-ui/core"
+import { Link } from "react-router-dom";
 export default function Login() {
     //也可以用useState但會影響效能
     const email = useRef();
@@ -27,6 +28,7 @@ export default function Login() {
                     </span>
                 </div>
                 <div className="loginRight">
+                    <div className="loginBox">
                     <form className="loginBox" onSubmit={handleClick}>
                         <input 
                             placeholder="電子郵件" 
@@ -41,17 +43,18 @@ export default function Login() {
                             minLength = "8"
                             ref={password}/>
                         {/* 錯誤訊息回報 */}
-                         <span>{error? error.response.data.message : ""}</span>
+                        {error? <span>error.response.data.message</span> : null}
                         <button className="loginButton">
                             {isFetching ? <CircularProgress color="white" size="20px"/>:"登入"}
-                        </button>
-                        <span className="loginForgot">忘記密碼？</span>
-                        <button className="loginRegisterButton">
-                        {isFetching ? <CircularProgress color="white" size="20px"/>:"創建新帳號"}
-                        </button>
-
-                        
+                        </button>          
                     </form>
+                    <span className="loginForgot">忘記密碼？</span>  
+                    <Link className="loginRegisterLink" to="/register">
+                    <button className="loginRegisterButton">
+                        {isFetching ? <CircularProgress color="white" size="20px"/>:"創建新帳號"}
+                    </button>
+                    </Link>
+                    </div>
                 </div>
             </div>
         </div>

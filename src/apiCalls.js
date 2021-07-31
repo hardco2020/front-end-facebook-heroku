@@ -19,7 +19,7 @@ export const loginCall = async (userCredential,dispatch)=>{
         localStorage.setItem('token',res.data.data)
         localStorage.setItem('user',JSON.stringify(user_data.data.data)) 
         dispatch({type:"LOGIN_SUCCESS",payload:user_data.data.data});
-        //window.location.reload()
+        window.location.reload()
     }catch(e){
         if (e) {
             console.log(e.response.data.message) // some reason error message

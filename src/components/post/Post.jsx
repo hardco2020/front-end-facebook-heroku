@@ -1,11 +1,11 @@
 import "./post.css"
 import { MoreVert } from "@material-ui/icons"
-import { useState,useEffect } from "react"
+import { useState,useEffect, forwardRef } from "react"
 import axios from "axios"
 import {format} from 'timeago.js'
 import { Link } from "react-router-dom"
-
-export default function Post({post}) {
+//export default function Post({post}) {
+const Post = forwardRef(({post},ref)=> {
     const [user,setUser] = useState({});
     const [like,setLike] = useState(post.likes.length)
     const [isLiked,setIsLiked] = useState(false)
@@ -86,4 +86,6 @@ export default function Post({post}) {
              </div>
         </div>
     )
-}
+})
+
+export default Post

@@ -1,10 +1,13 @@
+import { Link } from 'react-router-dom'
 import './friend.css'
 
 export default function Friend({user}) {
     return (
-        <li className="sidebarFriend">
-            <img src={"https://i.imgur.com/HeIi0wU.png"} alt="" className="sidebarFriendImg" />
-            <span className="sidebarFriendName">{user.username}</span>
-        </li>
+        <Link to={"/profile/"+user.username} style={{textDecoration:"none",color: "inherit"}} >
+            <li className="sidebarFriend">
+                <img src={user.profilePicture === "" ? "https://i.imgur.com/HeIi0wU.png" : user.profilePicture}  alt="" className="sidebarFriendImg" />
+                <span className="sidebarFriendName">{user.username}</span>
+            </li>
+        </Link>
     )
 }

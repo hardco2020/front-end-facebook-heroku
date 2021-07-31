@@ -40,41 +40,42 @@ export default function Register() {
                     </span>
                 </div>
                 <div className="loginRight">
-                    <form className="loginBox" onSubmit={handleClick}>
-                        <input placeholder="用戶名稱" 
-                               ref={username}
-                               className="loginInput"
-                               required 
-                               minLength="3"
-                        />
-                        <input placeholder="電子郵件" 
-                               ref={email} 
-                               className="loginInput" 
-                               required
-                               type="email"
-                        />
-                        <input placeholder="密碼"    
-                               ref ={password} 
-                               className="loginInput" 
-                               type="password"
-                               required
-                               minLength="8"
-                        />
-                        <input placeholder="再一次輸入密碼"  
-                               ref={passwordAgain}
-                               className="loginInput" 
-                               type="password"
-                               required
-                
-                        />
-                        <button className="loginButton" type="submit">註冊</button>
-                        <Link className="loginRegisterButton" to="/login">
+                    <div className="loginBox">
+                        <form className="loginBox" onSubmit={handleClick}>
+                            <input placeholder="用戶名稱" 
+                                ref={username}
+                                className="loginInput"
+                                required 
+                                minLength="3"
+                            />
+                            <input placeholder="電子郵件" 
+                                ref={email} 
+                                className="loginInput" 
+                                required
+                                type="email"
+                            />
+                            <input placeholder="密碼"    
+                                ref ={password} 
+                                className="loginInput" 
+                                type="password"
+                                required
+                                minLength="8"
+                            />
+                            <input placeholder="再一次輸入密碼"  
+                                ref={passwordAgain}
+                                className="loginInput" 
+                                type="password"
+                                required
+                    
+                            />
+                            <button className="loginButton" type="submit">註冊</button>
+                        </form>
+                        <Link className="loginRegisterLink" to="/login">
                         <button className="loginRegisterButton">
                                 去登入
                         </button>
                         </Link>
-                    </form>
-                    
+                    </div>
                 </div>
             </div>
         </div>

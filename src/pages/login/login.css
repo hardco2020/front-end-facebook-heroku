@@ -29,7 +29,7 @@
     font-size: 24px;
 }
 .loginBox{
-    height: 300px;
+    height: 50%;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
@@ -64,7 +64,13 @@
 .loginForgot{
     text-align: center;
     color:#E6D0CE;
+    margin-bottom: 20px;
 
+}
+.loginRegisterLink{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
 }
 .loginRegisterButton{
     width: 50%;

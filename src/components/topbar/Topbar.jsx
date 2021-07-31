@@ -39,10 +39,13 @@ export default function Topbar(){
     //console.log(member.city)
     //透過user token在對遠端做要求
     useEffect(()=>{
+        let cancel
         setSearching(true)
         const searching = async()=>{
             try{
-                const searchResult = await axios.get('api/users/search/'+search)
+                const searchResult = await axios.get('api/users/search/'+search,{
+                    cancelToken: new axios.CancelToken(c => cancel = c)
+                })
                 setResults(searchResult.data.data)
                 setSearching(false)
             }catch(err){
@@ -52,6 +55,7 @@ export default function Topbar(){
             }
         };
         searching()
+        return () => cancel()
     },[search])
     //此處做切版
     return(
@@ -77,9 +81,9 @@ export default function Topbar(){
 
                         {results.map((value)=>{
                             return(
-                                <Link to={`/profile/${value.username}`} style={{textDecoration:"none",color: "inherit" }}>
+                                <Link to={`/profile/${value.username}`} style={{textDecoration:"none",color: "inherit" }} key={value._id}>
                                     <MenuItem className="searchItem">
-                                        <img src={"https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
+                                        <img src={value.profilePicture!==""? value.profilePicture:"https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
                                         {value.username}
                                     </MenuItem>
                                 </Link>
