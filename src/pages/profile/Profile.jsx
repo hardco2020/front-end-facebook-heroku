@@ -98,6 +98,7 @@ export default function Profile() {
         fetchUser();
     },[username]) //只render一次
 
+    console.log(username)
     return (
         <>
         <Topbar/>

@@ -59,6 +59,12 @@
 .likeIcon{
     width:32px;
     height:32px;
+    cursor: pointer;
+    object-fit: cover;
+}
+.HeartIcon{
+    width:20px;
+    height:20px;
     margin-right:5px;
     cursor: pointer;
     object-fit: cover;
@@ -71,4 +77,82 @@
     border-bottom: 1px dashed gray;
     font-size:15px;
 
+}
+.postHr{
+    margin:20px 0;
+
+}
+.postFunctionArea{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    
+}
+.postFunction{
+    display: flex;
+    align-items: center;
+    cursor:pointer
+}
+.postSendCommentImg{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-right:10px;
+}
+.Function{
+    margin-left:5px;
+}
+.postSingleComment{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 3%;
+    font-size:13px;
+}
+.postSingleCommentMain{
+    display: flex;
+    align-items: center;
+}
+.postCommentTime{
+    margin-left: 20%;
+    color:#90949c
+}
+.postCommentArea{
+    background-color: #F2F3F5;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    padding: 8px 12px;
+
+}
+.postCommentUsername{
+    margin-left: 5px;
+    margin-bottom:1px;
+}
+.postCommentContent{
+    margin-left: 5px;
+}
+.commentSendArea{
+    width: 90%;
+    height: 30px;
+    background-color: #F2F3F5;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+}
+.postSendComment{
+    display: flex;
+    align-items: center;
+}
+.postSendInput{
+    margin-left:2%;
+    border:none;
+    width:100%;
+    background-color: #F2F3F5;
+}
+.postSendInput:focus{
+    /* 去除掉點擊時的邊界 */
+    outline:none
 }

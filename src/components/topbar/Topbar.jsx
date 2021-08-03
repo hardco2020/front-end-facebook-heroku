@@ -39,23 +39,27 @@ export default function Topbar(){
     //console.log(member.city)
     //透過user token在對遠端做要求
     useEffect(()=>{
-        let cancel
-        setSearching(true)
-        const searching = async()=>{
-            try{
-                const searchResult = await axios.get('api/users/search/'+search,{
-                    cancelToken: new axios.CancelToken(c => cancel = c)
-                })
-                setResults(searchResult.data.data)
-                setSearching(false)
-            }catch(err){
-                console.log(err)
-                setSearching(false)
-                setResults([])
-            }
-        };
-        searching()
-        return () => cancel()
+        if (search===""){
+
+        }else{
+            let cancel
+            setSearching(true)
+            const searching = async()=>{
+                try{
+                    const searchResult = await axios.get('api/users/search/'+search,{
+                        cancelToken: new axios.CancelToken(c => cancel = c)
+                    })
+                    setResults(searchResult.data.data)
+                    setSearching(false)
+                }catch(err){
+                    console.log(err)
+                    setSearching(false)
+                    setResults([])
+                }
+            };
+            searching()
+            return () => cancel()
+        }
     },[search])
     //此處做切版
     return(

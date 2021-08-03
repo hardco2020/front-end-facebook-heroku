@@ -1,6 +1,5 @@
 import './sidebar.css'
 import {RssFeed,Group,Bookmark,HelpOutline,WorkOutline,Event,Chat,School,PlayCircleFilledOutlined} from '@material-ui/icons'
-import { Users } from '../../dummyData'
 import Friend from '../Friend/Friend'
 import { useEffect } from 'react'
 import axios from 'axios'

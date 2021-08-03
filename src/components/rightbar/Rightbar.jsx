@@ -21,16 +21,18 @@ export default function Rightbar({user}) {
     },[currentUser,user?._id])
     useEffect(()=>{
         //console.log(user?._id)
-        const getFriends = async()=>{
-            try{
-                const friendList = await axios.get('/api/users/friends/'+ user?._id)
-                setFriends(friendList.data.data)
-                
-            }catch(err){
-                console.log(err)
-            }
-        };
-        getFriends();
+        if(user){
+            const getFriends = async()=>{
+                try{
+                    const friendList = await axios.get('/api/users/friends/'+ user?._id)
+                    setFriends(friendList.data.data)
+                    
+                }catch(err){
+                    console.log(err)
+                }
+            };
+            getFriends();
+        }
     },[user?._id])
 
 
@@ -101,7 +103,9 @@ export default function Rightbar({user}) {
                 <h4 className="rightbarTitle">他的朋友</h4>
                 <div className="rightbarFollowings">
                     {friends.map((friend)=>(
-                    <Link to={"/profile/"+friend.username} style={{textDecoration:"none"}} key={friend.username}>
+                    //讓此處Refresh
+                    <a onClick={() => {window.location.href="/profile/"+friend.username}}>
+                    {/* <Link to={"/profile/"+friend.username} style={{textDecoration:"none"}} key={friend.username}  > */}
                     <div className="rightbarFollowing">
                         <img 
                             src={
@@ -113,7 +117,8 @@ export default function Rightbar({user}) {
                         />
                         <span className="rightbarFollowingName">{friend.username}</span>
                     </div>
-                    </Link>
+                    {/* </Link> */}
+                    </a>
                     ))}
 
                 </div>
