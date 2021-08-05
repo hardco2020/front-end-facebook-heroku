@@ -15,33 +15,26 @@ export default function Feed({username}) {
     const [page,setPage]  = useState(0);
 
     const user = JSON.parse(localStorage.getItem("user"))
-    // useEffect(()=>{
-    //     setPage(0)
-    //     console.log(page)
-    //     setPosts([])
-    //     // console.log(page)
-    //     // setPosts([])
-    //     // const fetchPosts = async ()=>{
-    //     //     const res = username 
-    //     //      ? await axios.get("/api/posts/profile/"+ username+"/"+page)
-    //     //      : await axios.get("/api/posts/timeline/all/"+page)    
-    //     //     console.log(res.data.data)
+    useEffect(()=>{
+        setPage(0)
+        console.log(page)
+        setPosts([])
+        
+        const fetchPosts = async ()=>{
+            const res = username 
+             ? await axios.get("/api/posts/profile/"+ username+"/"+page)
+             : await axios.get("/api/posts/timeline/all/"+page)    
+            console.log(res.data.data)
             
-    //     //     let data = ""
-    //     //     username ? data = res.data.data : data = res.data.data
-    //     //     console.log(res.data.datax)
-    //     //     if(res.data.data.length===0){
-    //     //         setHasMore(false)
-    //     //     }
-    //     //     data = res.data.data
-    //     //     data = data.sort((p1,p2)=>{
-    //     //         return new Date(p2.createdAt)-new Date(p1.createdAt);})
-    //     //     setPosts(data);
-
-            
-    //     // };
-    //     // fetchPosts();
-    // },[username])
+            let data = ""
+            username ? data = res.data.data : data = res.data.data
+            console.log(res.data.datax)
+            if(res.data.data.length===0){
+                setHasMore(false)
+            }
+        };
+        fetchPosts();
+    },[username])
     const fetchData = async() =>{
         console.log("test")
         const fetchPosts = async ()=>{
