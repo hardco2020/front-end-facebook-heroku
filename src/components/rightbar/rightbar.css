@@ -1,7 +1,9 @@
 .rightbar{
     flex:4;
-    margin-left:20px
-    
+    margin-left:20px;
+    position: sticky;
+    height: calc(100vh - 50px); 
+    top: 50px;
 }
 
 .rightbarWrapper{
