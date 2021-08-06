@@ -6,8 +6,8 @@ import Rightbar from "../../components/rightbar/Rightbar"
 import { useState,useEffect } from 'react'
 import axios from 'axios'
 import { useParams} from 'react-router'
-import { TextField, Button,IconButton } from '@material-ui/core'
-import { Edit,LocationCity,Language,FavoriteBorder,HighlightOff,PhotoLibrary } from '@material-ui/icons'
+import { TextField, Button,IconButton,CircularProgress } from '@material-ui/core'
+import { Edit,LocationCity,Language,FavoriteBorder,HighlightOff,PhotoLibrary} from '@material-ui/icons'
 import { Countries ,City} from '../../dummyData'
 import Popup from '../../components/popup/Popup'
 import { useRef } from 'react'
@@ -20,12 +20,14 @@ export default function Profile() {
     //修改個人檔案
     const [editProfile,setEditProfile] = useState(null);
     const [editCover,setEditCover] = useState(null);
+    const [isLoading,setIsLoading] = useState(false);
     const country = useRef();
     const city = useRef();
     const desc = useRef();
     const relationship = useRef();
 
     const handleEditFile = async()=>{
+        setIsLoading(true)
         //先確認圖片有沒有做更改 此處要上線才能測試
         let coverUrl = null
         let profileUrl = null
@@ -76,6 +78,7 @@ export default function Profile() {
         const updateResult = await axios.put('/api/users/',currentUser)
         console.log(updateResult)
         setPopup(false)
+        setIsLoading(false)
         window.location.reload()
     }
 
@@ -205,11 +208,11 @@ export default function Profile() {
                                                 </select>
                                         </div>
                                         <div className="editSend">
-                                            <Button 
+                                            <Button disabled={isLoading} 
                                                 style={{backgroundColor:"#42b72a"}}
                                                 onClick={handleEditFile}
                                             >
-                                                送出
+                                                {isLoading ? <CircularProgress color="white" size="20px"/> :"更改"}
                                             </Button>
                                         </div>
                                     </div>

@@ -4,6 +4,7 @@ import Friend from '../Friend/Friend'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 export default function Sidebar(){
     const [user,setUser] = useState([])
     useEffect(()=>{
@@ -24,10 +25,12 @@ export default function Sidebar(){
                         <RssFeed className="sidebarIcon"/>
                         <span className="sidebarListItemText">Feed</span>
                     </li>
+                    <Link to="/messenger" style={{textDecoration:"none" ,color:"inherit"}}>
                     <li className="sidebarListItem">
                         <Chat className="sidebarIcon"/>
-                        <span className="sidebarListItemText">Chats</span>
+                        <span className="sidebarListItemText">聊天室</span>
                     </li>
+                    </Link>
                     <li className="sidebarListItem">
                         <PlayCircleFilledOutlined className="sidebarIcon"/>
                         <span className="sidebarListItemText">Videos</span>
