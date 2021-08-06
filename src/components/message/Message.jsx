@@ -7,7 +7,7 @@ export default function Message({message,own,data}) {
                 <a onClick={() => {window.location.href="/profile/"+data.username}} >
                 <img
                  className="messageImg"
-                 src={data ? data.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
+                 src={data && data.profilePicture!=="" ? data.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
                  alt="" 
                 />
                 </a>
