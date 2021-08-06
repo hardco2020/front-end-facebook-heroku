@@ -109,7 +109,7 @@ export default function Topbar(){
                         <Person/>
                         <span className="topbarIconBadge">1</span>
                     </div>
-                    <Link to={"/messenger"} style={{textDecoration:"none"}}>
+                    <Link to={"/messenger"} style={{textDecoration:"none" ,color:"inherit"}}>
                     <div className="topbarIconItem">
                         <Chat/>
                         <span className="topbarIconBadge">1</span>

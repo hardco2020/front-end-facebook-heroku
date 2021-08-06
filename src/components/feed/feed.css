@@ -6,3 +6,10 @@
     align-items: center;
     justify-content: center;
 }
+
+.feedWrapper ::-webkit-scrollbar{
+    display: none;
+}
+.feddScrollbar::-webkit-scrollbar{
+    display: none;
+}

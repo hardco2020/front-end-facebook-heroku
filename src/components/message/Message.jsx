@@ -4,7 +4,7 @@ export default function Message({message,own,data}) {
     return (
         <div className={own ? "message own" : "message"}>
             <div className="messageTop">
-                <a onClick={() => {window.location.href="/profile/"+data.username}}>
+                <a onClick={() => {window.location.href="/profile/"+data.username}} style={{color:"inherit"}}>
                 <img
                  className="messageImg"
                  src={data ? data.profilePicture : "https://i.imgur.com/HeIi0wU.png"}
