@@ -1,7 +1,7 @@
 import './chatOnline.css'
 import axios from 'axios'
 import { useState,useEffect } from 'react';
-export default function ChatOnline({onlineUsers , currentId, setCurrentChat}) {
+export default function ChatOnline({onlineUsers , currentId, setCurrentChat,switchChat}) {
     const [friends,setFriends] = useState([]);
     const [onlineFriends,setOnlineFriends] = useState([]);
 
@@ -31,7 +31,7 @@ export default function ChatOnline({onlineUsers , currentId, setCurrentChat}) {
                 res = await axios.post("/api/conversations/",data)
             }
             console.log(res.data.data)
-            setCurrentChat(res.data.data)
+            switchChat(res.data.data)
         }catch(err){
             console.log(err)
         }
