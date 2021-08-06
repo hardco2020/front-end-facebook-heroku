@@ -12,6 +12,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+    cursor:pointer;
 }
 .messageText{
     padding: 10px;

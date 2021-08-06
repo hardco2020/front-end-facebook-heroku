@@ -20,8 +20,18 @@ export default function ChatOnline({onlineUsers , currentId, setCurrentChat}) {
 
     const handleClick = async(user)=>{
         try{
-            const res = await axios.get(`/api/conversations/find/${currentId}/${user._id}`);
-            setCurrentChat(res.data.dat)
+            let res = await axios.get(`/api/conversations/find/${currentId}/${user._id}`);
+            //不存在聊天室 建立一個
+            if (res.data.data==null){
+                console.log("沒有聊天室")
+                const data  = {
+                    senderId:user._id,
+                    receiverId:currentId
+                }
+                res = await axios.post("/api/conversations/",data)
+            }
+            console.log(res.data.data)
+            setCurrentChat(res.data.data)
         }catch(err){
             console.log(err)
         }

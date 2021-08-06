@@ -43,7 +43,7 @@ export default function Login() {
                             minLength = "8"
                             ref={password}/>
                         {/* 錯誤訊息回報 */}
-                        {error? <span>error.response.data.message</span> : null}
+                        {error? <span>{error.response.data.message}</span> : null}
                         <button className="loginButton">
                             {isFetching ? <CircularProgress color="white" size="20px"/>:"登入"}
                         </button>          

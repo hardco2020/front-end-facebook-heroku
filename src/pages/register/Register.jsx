@@ -1,3 +1,4 @@
+import userEvent from "@testing-library/user-event";
 import axios from "axios";
 import { useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -22,6 +23,7 @@ export default function Register() {
                 email : email.current.value,
                 password : password.current.value        
             }
+            console.log(user)
             try{
                 await axios.post("/auth/local/signup",user);
                 history.push("/login")

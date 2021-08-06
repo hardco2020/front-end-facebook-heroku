@@ -12,6 +12,7 @@ export default function Messenger() {
     const user = JSON.parse(localStorage.getItem("user"))
     const [conversations,setConversations] = useState([]);
     const [currentChat,setCurrentChat] = useState(null);
+    const [currentData,setCurrentData] = useState(null);
     const [messages,setMessages] = useState([]);
     const [onlineUsers,setOnlineUsers] = useState([]);
     const [arrivalMessage,setArrivalMessage] = useState(null);
@@ -36,7 +37,6 @@ export default function Messenger() {
     },[arrivalMessage,currentChat])
 
     useEffect(()=>{
-        console.log("test2")
         socket.current.emit("addUser",user._id)
         socket.current.on("getUsers",users=>{
             setOnlineUsers(
@@ -44,13 +44,8 @@ export default function Messenger() {
             );
         })
     },[])
-    // useEffect(()=>{
-    //     socket?.on("welcome",message=>{
-    //         console.log(message)
-    //     })
-    // },[socket])
+    
     useEffect(()=>{
-        console.log("test1")
         const getMessages = async()=>{
             try{
                 const res = await axios.get('/api/messages/'+currentChat._id)
@@ -104,6 +99,22 @@ export default function Messenger() {
             console.log(err)
         }
     };
+    const switchChat = (c)=>{
+        setCurrentChat(c)
+        //找到chat裡面的圖片 (因為一定有一個是自己，所以先不用管自己 後續利用own去做判斷 如果own就傳user.pc進去
+        //所以這邊要做的是找到另一個user的圖片 然後傳進去message裡面 才可以避免request太多次
+        const friendId = c.members.find(m=> m !== user._id);
+        const getUser = async()=>{
+            try{
+                const res = await axios(`/api/users?userId=${friendId}`)
+                setCurrentData(res.data.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        getUser();
+    }
+    console.log(onlineUsers)
     return (
         <>
         <Topbar/>
@@ -113,7 +124,7 @@ export default function Messenger() {
                     <input placeholder="尋找朋友" className="chatMenuInput" type="text" />
 
                     {conversations.map((c)=>(
-                        <div onClick={()=>setCurrentChat(c)}>
+                        <div onClick={()=>switchChat(c)}>
                             <Conversation conversation={c} currentUser={user} key={c._id}/>
                         </div>
                     ))}
@@ -128,8 +139,8 @@ export default function Messenger() {
                     <div className="chatBoxTop">
                         
                         {messages.map((m)=>(
-                            <div ref={scrollRef}>
-                            <Message message={m} own={m.sender === user._id}key={m._id}/>
+                            <div ref={scrollRef} key={m._id} >
+                            <Message message={m} own={m.sender === user._id} data={m.sender === user._id ?user:currentData} />
                             </div>
                         ))}
                         
@@ -153,6 +164,7 @@ export default function Messenger() {
             </div>
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
+                <h4 className="rightbarTitle">正在線上的好友</h4>
                     <ChatOnline 
                         onlineUsers={onlineUsers} 
                         currentId={user._id} 
