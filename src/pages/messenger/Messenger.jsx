@@ -20,7 +20,6 @@ export default function Messenger() {
     const socket = useRef();
     const scrollRef = useRef();
         
-    console.log(process.env.REACT_APP_SOCKET_PORT)
     useEffect(()=>{
         socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
         socket.current.on("getMessage",data=>{
@@ -57,7 +56,7 @@ export default function Messenger() {
         };
         getMessages();
     },[currentChat]);
-
+    console.log(currentChat)
     useEffect(()=>{
         const getConversations = async()=>{
             try{
