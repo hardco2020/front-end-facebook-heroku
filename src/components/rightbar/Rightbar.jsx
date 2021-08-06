@@ -6,16 +6,31 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link} from 'react-router-dom'
 import { Add, Remove } from '@material-ui/icons'
+import { useRef } from 'react'
+import {io} from 'socket.io-client'
 
 export default function Rightbar({user}) {
     
-    //let history = useHistory();
+    //let history = useHistory()
     const [friends,setFriends] = useState([])
     const currentUser = JSON.parse(localStorage.getItem("user"))  
     //console.log(currentUser)
     //const {dispatch,user:contextuser} = useContext(AuthContext)
     //此處是使用localstorage去做確認 等於說如果做更新了 要直接去修改裡面的資料
     const [followed,setFollowed] = useState(currentUser.followings.includes(user?._id))
+    const [onlineUsers,setOnlineUsers] = useState([]);
+    const socket = useRef();
+
+    useEffect(()=>{
+        socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
+        socket.current.emit("addUser",currentUser._id)
+        socket.current.on("getUsers",users=>{
+            setOnlineUsers(
+                currentUser.followings.filter((f)=> users.some((u)=>u.userId===f))
+            );
+        })
+    },[])
+    console.log(onlineUsers)
     useEffect(()=>{
        setFollowed(currentUser.followings.includes(user?._id))
     },[currentUser,user?._id])
@@ -67,8 +82,8 @@ export default function Rightbar({user}) {
                 <img src="assets/add.jpg" alt="" className="rightbarAd" />
                 <h4 className="rightbarTitle">正在線上的好友</h4>
                 <ul className="rightbarFirendList">
-                    {Users.map(u=>(
-                        <Online key={u.id} user={u}/>
+                    {onlineUsers.map(u=>(
+                        <Online key={u} user={u}/>
                     ))}
                 </ul>    
             </>

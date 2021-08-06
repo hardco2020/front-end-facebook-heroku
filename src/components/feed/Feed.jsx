@@ -16,14 +16,13 @@ export default function Feed({username}) {
 
     const user = JSON.parse(localStorage.getItem("user"))
     useEffect(()=>{
-        console.log("我應該先做")
         setPosts([])
         
         const fetchPosts = async ()=>{
             const res = username 
              ? await axios.get("/api/posts/profile/"+ username+"/"+page)
              : await axios.get("/api/posts/timeline/all/"+page)    
-            console.log(res.data.data)
+            //console.log(res.data.data)
             
             if(res.data.data.length===0){
                 setHasMore(false)
@@ -33,14 +32,11 @@ export default function Feed({username}) {
         };
         fetchPosts();
     },[username])
-    console.log(page)
-    console.log(posts.length)
     const fetchData = async() =>{
         //此處用來擋著跑的會比inital state快的問題
         if(page===0){
             console.log("test1")
         }else{
-            console.log("test")
             const fetchPosts = async ()=>{
                 setPage(page+1)
                 console.log(page)
