@@ -22,7 +22,7 @@ export default function Messenger() {
         
     console.log(process.env.REACT_APP_SOCKET_PORT)
     useEffect(()=>{
-        socket.current = io("ws://"+process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
+        socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
         socket.current.on("getMessage",data=>{
             setArrivalMessage({
                 sender: data.senderId,
