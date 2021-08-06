@@ -60,10 +60,10 @@ export default function Profile() {
         }
         //更新本地資訊
         console.log(coverUrl,profileUrl)
-        if(coverUrl.data.link!==null){
+        if(coverUrl!==null){
             currentUser.coverPicture = coverUrl.data.link
         }
-        if(profileUrl.data.link!==null){
+        if(profileUrl!==null){
             currentUser.profilePicture = profileUrl.data.link
         } 
         currentUser.from = country.current.value
@@ -72,16 +72,11 @@ export default function Profile() {
         currentUser.desc = desc.current.value
         console.log(currentUser)
         localStorage.setItem("user",JSON.stringify(currentUser))
-        // const update = {
-        //     city:city.current.value,
-        //     from:country.current.value,
-        //     desc: desc.current.value,
-        //     relationship:relationship.current.value
-        // }
-        // console.log(update)
         //更新遠端
         const updateResult = await axios.put('/api/users/',currentUser)
         console.log(updateResult)
+        setPopup(false)
+        window.location.reload()
     }
 
 
