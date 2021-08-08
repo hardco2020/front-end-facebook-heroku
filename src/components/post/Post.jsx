@@ -1,11 +1,11 @@
 import "./post.css"
 import { MoreVert,ThumbUpOutlined,ChatBubbleOutline,Share} from "@material-ui/icons"
-import { useState,useEffect, forwardRef } from "react"
+import { useState,useEffect} from "react"
 import axios from "axios"
 import {format} from 'timeago.js'
 import { Link } from "react-router-dom"
 //export default function Post({post}) {
-const Post = forwardRef(({post},ref)=> {
+const Post = (({post})=> {
     const [user,setUser] = useState({});
     const [like,setLike] = useState(post.likes.length)
     const [isLiked,setIsLiked] = useState(false)
@@ -52,6 +52,21 @@ const Post = forwardRef(({post},ref)=> {
             post.comment = currentComment
             event.target.value = ""
             setHideComment('')
+            //如果是自己留言不能發通知
+            if(currentUser._id !== post.userId){
+                const  sendNotice = async ()=>{
+                    const notice = {
+                        senderId : currentUser._id,
+                        object : "comment",
+                        senderPic : currentUser.profilePicture,
+                        senderUsername : currentUser.username,
+                        receiverId: post.userId,
+                        postId: post._id
+                    }
+                    await axios.post('/api/notice/post',notice)
+                }
+                sendNotice()
+            }
         }
     }
     const likeHandler= ()=>{
@@ -66,6 +81,21 @@ const Post = forwardRef(({post},ref)=> {
         //如果有喜歡過的話就扣一沒有喜歡過則是加一
         setLike(isLiked ? like-1: like+1)
         setIsLiked(!isLiked)
+        if(isLiked===false && currentUser._id!==post.userId){
+           //喜歡則發送notice
+            const  sendNotice = async ()=>{
+                const notice = {
+                    senderId : currentUser._id,
+                    object : "like",
+                    senderPic : currentUser.profilePicture,
+                    senderUsername : currentUser.username,
+                    receiverId: post.userId,
+                    postId: post._id
+                }
+                await axios.post('/api/notice/post',notice)
+            }
+            sendNotice()
+        }
     }
     const showComment = ()=>{
         if (hideComment === ""){
@@ -138,7 +168,7 @@ const Post = forwardRef(({post},ref)=> {
                         {currentComment.length
                             ? currentComment.map((comment)=>{
                                 return(
-                                    <div className="postSingleComment">
+                                    <div className="postSingleComment" key={comment._id}>
                                         <div className="postSingleCommentMain">
                                             <img 
                                                 src={comment.userPic? comment.userPic : "https://i.imgur.com/HeIi0wU.png"}
@@ -158,7 +188,7 @@ const Post = forwardRef(({post},ref)=> {
                             })
                             : post.comment && post.comment.map((comment)=>{
                                 return(
-                                    <div className="postSingleComment">
+                                    <div className="postSingleComment" key={comment._id}>
                                         <div className="postSingleCommentMain">
                                             <img 
                                                 src={comment.userPic? comment.userPic : "https://i.imgur.com/HeIi0wU.png"}
@@ -176,28 +206,7 @@ const Post = forwardRef(({post},ref)=> {
                                     </div>
                                 )
                             })         
-                        }
-                        {/* {post.comment && post.comment.map((comment)=>{
-                            return(
-                                <div className="postSingleComment">
-                                    <div className="postSingleCommentMain">
-                                        <img 
-                                            src={comment.userPic? comment.userPic : "https://i.imgur.com/HeIi0wU.png"}
-                                            alt="" 
-                                            className="postSendCommentImg"   
-                                        />
-                                        <div className="postCommentArea">
-                                            <span className="postCommentUsername"><b>{comment.userName}</b></span>
-                                            <span className="postCommentContent">{comment.comment}</span>
-                                        </div>
-                                    </div>
-                                    <div className="postCommentTime">
-                                        {format(comment.date)}
-                                    </div>
-                                </div>
-                            )
-                        })} */}
-                    
+                        }            
                  </div>
 
                  <div className="postSendComment">

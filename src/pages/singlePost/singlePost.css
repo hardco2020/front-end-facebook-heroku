@@ -1,0 +1,16 @@
+.singlePost{
+    display: flex;
+    align-items: center;
+    background-color:white;
+    height:100vh
+}
+.singlePostLeft{
+    flex:3.5
+}
+.singlePostCenter{
+    height:100vh;
+    flex:8.5
+}
+.singlePostRight{
+    flex:3.5
+}

@@ -1,4 +1,5 @@
 import "./topbar.css"
+import Notice  from '../notice/Notice'
 import { Search,Person,Chat,Notifications,ExitToApp} from "@material-ui/icons"
 import { MenuItem,CircularProgress} from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom"
@@ -13,9 +14,23 @@ export default function Topbar(){
     const [display,setDisplay] = useState(false);
     const [results,setResults] = useState([]);
     const [searching,setSearching] = useState(false);
+    const [noticePopup,setNoticePopup] = useState(false)
+    const [notices,setNotices] = useState(null)
     const user = JSON.parse(localStorage.getItem("user"))
     const wrapperRef = useRef(null) //利用此點判斷滑鼠的落點區域
 
+    //導入notification
+    useEffect(()=>{
+       const getNotification = async()=>{
+           try{
+                const res = await axios('/api/notice/'+user._id)
+                setNotices(res.data.data)
+           }catch(err){
+               console.log(err)
+           }
+       } 
+       getNotification()
+    },[])
     //判斷搜尋欄開關
     useEffect(()=>{
         document.addEventListener('mousedown',handleClickOuteside)
@@ -85,12 +100,12 @@ export default function Topbar(){
 
                         {results.map((value)=>{
                             return(
-                                <Link to={`/profile/${value.username}`} style={{textDecoration:"none",color: "inherit" }} key={value._id}>
+                                <div onClick={() => {window.location.href="/profile/"+value.username}} key={value._id}>
                                     <MenuItem className="searchItem">
                                         <img src={value.profilePicture!==""? value.profilePicture:"https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
                                         {value.username}
                                     </MenuItem>
-                                </Link>
+                                </div>
                                 
                             )
                         })}
@@ -100,29 +115,41 @@ export default function Topbar(){
                 
             </div>
             <div className="topbarRight">
-                <div className="topbarLinks">
-                    <span className="topbarLink">Homepage</span>
-                    <span className="topbarLink">Timeline</span>
-                </div>
+                {/* <div className="topbarLinks">
+                </div> */}
                 <div className="topbarIcons">
-                    <div className="topbarIconItem">
+                    {/* <div className="topbarIconItem">
                         <Person/>
                         <span className="topbarIconBadge">1</span>
-                    </div>
+                    </div> */}
                     <Link to={"/messenger"} style={{textDecoration:"none" ,color:"inherit"}}>
                     <div className="topbarIconItem">
                         <Chat/>
                         <span className="topbarIconBadge">1</span>
                     </div>
                     </Link>
-                    <div className="topbarIconItem">
+                    <div className="topbarIconItem" onClick={()=>setNoticePopup(!noticePopup)}>
                         <Notifications/>
-                        <span className="topbarIconBadge">1</span>
+
+                        {
+                            //算出notices內 read= false的數量 
+                            notices && notices.reduce(function(n, val) {
+                            return n + (!val.read.includes(user._id));
+                            }, 0) ===0 ? "" :
+                            <span className="topbarIconBadge">{notices&&
+                                notices.reduce(function(n, val) {
+                                return n + (!val.read.includes(user._id));
+                                }, 0)}
+                            </span>
+                        }              
                     </div>
+                    {noticePopup &&(
+                        <Notice notices = {notices} />
+                 )}  
                 </div>
-                <Link to={`/profile/${user.username}`}>
+                <div onClick={() => {window.location.href="/profile/"+user.username}}>
                 <img src={user.profilePicture ? user.profilePicture : "https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
-                </Link>
+                </div>
                 <div className="topbarIconItem">
                         <ExitToApp/>
                         <span onClick={signout}>登出</span>

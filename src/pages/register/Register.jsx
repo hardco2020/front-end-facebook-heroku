@@ -1,4 +1,3 @@
-import userEvent from "@testing-library/user-event";
 import axios from "axios";
 import { useRef } from "react";
 import { Link, useHistory } from "react-router-dom";

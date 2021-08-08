@@ -10,6 +10,7 @@ import{
   Redirect
 } from 'react-router-dom'
 import axios from 'axios';
+import SinglePost from './pages/singlePost/SinglePost';
 function App() {
   const user = JSON.parse(localStorage.getItem("user"))
   const token = localStorage.getItem("token")
@@ -46,6 +47,9 @@ function App() {
         </Route>
         <Route path="/profile/:username">
           <Profile/>
+        </Route>
+        <Route path="/post/:postId">
+          <SinglePost/>
         </Route>
         <Route path="/">
           <Home/>

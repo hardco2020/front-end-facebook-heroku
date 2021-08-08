@@ -1,10 +1,8 @@
 
 import './rightbar.css'
-import { Users } from '../../dummyData'
 import Online from '../online/Online'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link} from 'react-router-dom'
 import { Add, Remove } from '@material-ui/icons'
 import { useRef } from 'react'
 import {io} from 'socket.io-client'
@@ -30,7 +28,6 @@ export default function Rightbar({user}) {
             );
         })
     },[])
-    console.log(onlineUsers)
     useEffect(()=>{
        setFollowed(currentUser.followings.includes(user?._id))
     },[currentUser,user?._id])
@@ -39,9 +36,10 @@ export default function Rightbar({user}) {
         if(user){
             const getFriends = async()=>{
                 try{
-                    const friendList = await axios.get('/api/users/friends/'+ user?._id)
-                    setFriends(friendList.data.data)
-                    
+                    if(user?._id){
+                        const friendList = await axios.get('/api/users/friends/'+ user?._id)
+                        setFriends(friendList.data.data)
+                    }
                 }catch(err){
                     console.log(err)
                 }
@@ -119,7 +117,7 @@ export default function Rightbar({user}) {
                 <div className="rightbarFollowings">
                     {friends.map((friend)=>(
                     //讓此處Refresh
-                    <a onClick={() => {window.location.href="/profile/"+friend.username}}>
+                    <div onClick={() => {window.location.href="/profile/"+friend.username}} key={friend._id}>
                     {/* <Link to={"/profile/"+friend.username} style={{textDecoration:"none"}} key={friend.username}  > */}
                     <div className="rightbarFollowing">
                         <img 
@@ -133,7 +131,7 @@ export default function Rightbar({user}) {
                         <span className="rightbarFollowingName">{friend.username}</span>
                     </div>
                     {/* </Link> */}
-                    </a>
+                    </div>
                     ))}
 
                 </div>

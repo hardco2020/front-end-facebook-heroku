@@ -7,11 +7,13 @@ import { useState,useEffect } from 'react'
 import axios from 'axios'
 import { useParams} from 'react-router'
 import { TextField, Button,IconButton,CircularProgress } from '@material-ui/core'
-import { Edit,LocationCity,Language,FavoriteBorder,HighlightOff,PhotoLibrary} from '@material-ui/icons'
+import { Edit,LocationCity,Language,FavoriteBorder,HighlightOff,PhotoLibrary,Message} from '@material-ui/icons'
 import { Countries ,City} from '../../dummyData'
 import Popup from '../../components/popup/Popup'
 import { useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 export default function Profile() {
+    const history = useHistory();
     const currentUser = JSON.parse(localStorage.getItem("user"))
     const [user,setUser] = useState({});
     const [popup,setPopup] = useState(false);
@@ -96,7 +98,30 @@ export default function Profile() {
         fetchUser();
     },[username]) //只render一次
 
-    console.log(username)
+    const openChat = ()=>{
+        const setChat = async()=>{
+            try{
+                let res = await axios.get(`/api/conversations/find/${currentUser._id}/${user._id}`);
+                //不存在聊天室 建立一個
+                if (res.data.data==null){
+                    const data  = {
+                        senderId:user._id,
+                        receiverId:currentUser._id
+                    }
+                    res = await axios.post("/api/conversations/",data)
+                }
+                //建立好新的聊天室
+                //跳轉並且傳送預設的聊天室
+                history.push({
+                    pathname: '/messenger',
+                    state: { chat: res.data.data }
+                })
+            }catch(err){
+                console.log(err)
+            }
+        }
+        setChat()
+    }
     return (
         <>
         <Topbar/>
@@ -117,6 +142,8 @@ export default function Profile() {
                     <div className="profileInfo">
                         <h4 className="profileInfoName">{user.username}</h4>
                         <span className="profileInfoDesc">{user.desc}</span>
+                        <div className="profileFunction">
+                        { user._id!==currentUser._id && <Button startIcon={<Message/>} onClick={openChat} >傳送訊息</Button> }
                         {currentUser.username === user.username &&(
                             <>
                             <Button startIcon={<Edit/>} onClick={()=>setPopup(true)}>編輯個人檔案</Button>
@@ -220,6 +247,7 @@ export default function Profile() {
                             </Popup>
                             </>
                         )}
+                        </div>
                     </div>
                 </div>
                 <div className="profileRightBottom">

@@ -38,18 +38,18 @@ export default function ChatOnline({onlineUsers , currentId, setCurrentChat,swit
     }
     return (
         <div className="chatOnline">
-            {onlineFriends.map( (o) =>(
+            {friends.map( (o) =>(
             <div className="chatOnlineFriend" key={o._id} onClick={()=>handleClick(o) }>
                 <div className="chatOnlineImgContainer">
                     <img 
                         className="chatOnlineImg"
                         src={ o.profilePicture!=="" 
                             ? o.profilePicture 
-                            :"https://imgur.com/P68DSf9.jpg"
+                            :"https://i.imgur.com/HeIi0wU.png"
                         }
                         alt="" 
                     />
-                    <div className="chatOnlineBadge"></div>
+                    {onlineUsers.includes(o._id) &&<div className="chatOnlineBadge"></div>}
                 </div>
                 <span className="chatOnlineName">{o.username}</span>
             </div> 

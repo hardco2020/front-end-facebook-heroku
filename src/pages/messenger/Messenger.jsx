@@ -6,9 +6,11 @@ import ChatOnline from '../../components/chatOnline/ChatOnline'
 import { useState,useEffect,useRef} from 'react'
 import axios from 'axios'
 import {io} from 'socket.io-client'
+import { useLocation } from 'react-router-dom'
 
 
 export default function Messenger() {
+    let location = useLocation();
     const user = JSON.parse(localStorage.getItem("user"))
     const [conversations,setConversations] = useState([]);
     const [currentChat,setCurrentChat] = useState(null);
@@ -19,7 +21,7 @@ export default function Messenger() {
     const newMessage = useRef("");
     const socket = useRef();
     const scrollRef = useRef();
-        
+    
     useEffect(()=>{
         socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
         socket.current.on("getMessage",data=>{
@@ -46,17 +48,23 @@ export default function Messenger() {
     },[])
     
     useEffect(()=>{
-        const getMessages = async()=>{
-            try{
-                const res = await axios.get('/api/messages/'+currentChat._id)
-                setMessages(res.data.data)
-            }catch(err){
-                console.log(err)
-            }
-        };
-        getMessages();
+        if(currentChat){
+            console.log(currentChat)
+            const getMessages = async()=>{
+                try{
+                    const res = await axios.get('/api/messages/'+currentChat._id)
+                    console.log("到這")
+                    console.log(res.data.data)
+                    setMessages(res.data.data)
+                }catch(err){
+                    console.log(err)
+                }
+            };
+            getMessages();
+        }else{
+            console.log("沒有送")
+        }
     },[currentChat]);
-    console.log(currentChat)
     useEffect(()=>{
         const getConversations = async()=>{
             try{
@@ -73,7 +81,6 @@ export default function Messenger() {
         scrollRef?.current?.scrollIntoView({behavior:"smooth"});
     },[messages])
     const handleSubmit = async(e)=>{
-        
         e.preventDefault();
         console.log(newMessage.current.value)
         const message = {
@@ -90,15 +97,46 @@ export default function Messenger() {
             receiverId,
             text:newMessage.current.value,
         })
-        
+        console.log(user._id)
+        console.log(receiverId)
         try{
             const res = await axios.post("/api/messages",message);
             setMessages([...messages,res.data.data])
             newMessage.current.value=""
+            if(!onlineUsers.includes(receiverId)){
+                const  sendNotice = async ()=>{
+                    const notice = {
+                        senderId : user._id,
+                        object : "message",
+                        senderPic : user.profilePicture,
+                        senderUsername : user.username,
+                        receiverId
+                    }
+                    await axios.post('/api/notice',notice)
+                }
+                sendNotice()
+            }
         }catch(err){
             console.log(err)
         }
     };
+    useEffect(()=>{
+        try{
+            if (location.state.chat){
+                console.log(location.state.chat)
+                switchChat(location.state.chat)
+            }else{
+                console.log("wrong")
+            }
+        }catch(err){
+            console.log(err)
+        }
+    },[])
+    const enterSubmit = async(event)=>{
+        if(event.key === 'Enter'){
+            handleSubmit(event)
+        }
+    }
     const switchChat = (c)=>{
         setCurrentChat(c)
         //找到chat裡面的圖片 (因為一定有一個是自己，所以先不用管自己 後續利用own去做判斷 如果own就傳user.pc進去
@@ -114,7 +152,6 @@ export default function Messenger() {
         }
         getUser();
     }
-    console.log(onlineUsers)
     return (
         <>
         <Topbar/>
@@ -151,6 +188,7 @@ export default function Messenger() {
                             placeholder="寫些什麼吧..."
                             ref = {newMessage}
                             defaultValue  = {newMessage.current.value}
+                            onKeyPress={enterSubmit}
                         >
                         </textarea>
                         <button className="chatSubmitButton" onClick={handleSubmit}>送出</button>
