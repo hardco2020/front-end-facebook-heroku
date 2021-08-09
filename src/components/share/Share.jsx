@@ -69,7 +69,6 @@ export default function Share() {
 
         }
     }
-    console.log(isLoading)
     return (
         <div className="share">
             <div className="shareWrapper">

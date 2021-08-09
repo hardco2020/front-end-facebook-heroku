@@ -6,7 +6,6 @@ export default function ChatOnline({onlineUsers , currentId, setCurrentChat,swit
     const [onlineFriends,setOnlineFriends] = useState([]);
 
     useEffect(()=>{
-        console.log("test")
         const getFriends = async ()=>{
             const res = await axios.get("/api/users/friends/"+currentId)
             setFriends(res.data.data)
@@ -30,7 +29,6 @@ export default function ChatOnline({onlineUsers , currentId, setCurrentChat,swit
                 }
                 res = await axios.post("/api/conversations/",data)
             }
-            console.log(res.data.data)
             switchChat(res.data.data)
         }catch(err){
             console.log(err)

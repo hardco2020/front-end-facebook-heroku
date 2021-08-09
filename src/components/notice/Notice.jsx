@@ -1,13 +1,14 @@
 import './notice.css'
-import { Button } from '@material-ui/core'
+import { Button,CircularProgress } from '@material-ui/core'
 import { EmojiPeopleRounded,Chat,AddPhotoAlternate,Favorite } from '@material-ui/icons';
 import {format} from 'timeago.js'
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 export default function Notice({notices}) {
     const user = JSON.parse(localStorage.getItem("user"))
+    const [acceptLoading,setAcceptLoading] =useState(false)
     const history = useHistory();
-    console.log(notices)
     const handleLink = (notice)=>{
         //要發送更改read的API      
         //根據有沒有read過來決定會不會觸發
@@ -15,7 +16,7 @@ export default function Notice({notices}) {
             console.log("test")
             const res = await axios.put('/api/notice/update/'+notice._id)
             console.log(res.data.data)
-            if(notice.object === 'post'){
+            if(notice.object === 'post' || notice.object==='friendRequest'|| notice.object==='friendAccepted'){
                 window.location.href="/profile/"+notice.senderUsername
             }
             else if(notice.object ==='message'){
@@ -26,12 +27,39 @@ export default function Notice({notices}) {
                 })
             }
             else if(notice.object ==='comment' || notice.object ==='like'){
-                history.push({
-                    pathname:'/post/'+notice.postId
-                })
+                // history.push({
+                //     pathname:'/post/'+notice.postId
+                // })
+                window.location.href="/post/"+notice.postId
             }
         }
         updateNotice()     
+    }
+    const acceptFriendRequest = (e,notice)=>{
+        e.stopPropagation();
+        setAcceptLoading(true)
+        console.log(notice)
+        //加朋友 並且刪除提醒和pending
+        const action = async()=>{
+            const addFriend = await axios.put("/api/users/friend/"+notice.senderId)
+            const deleteNotice = await axios.delete('/api/notice/delete/'+notice._id)
+            const deletePending = await axios.delete('/api/users/pending/'+notice.senderId)
+            const newNotice = {
+                senderId : user._id,
+                object : "friendAccepted",
+                senderPic : user.profilePicture,
+                senderUsername : user.username,
+                receiverId: notice.senderId
+            }
+            const sendNotice = await axios.post('/api/notice',newNotice)
+            //window.location.reload()
+            // console.log(addFriend.data.data)
+            // console.log(deleteNotice.data.data)
+            // console.log(deletePending.data.data)
+            // console.log(sendNotice.data.data)
+            setAcceptLoading(false)
+        }
+        action()
     }
     return (
         <div className="notice">
@@ -43,7 +71,6 @@ export default function Notice({notices}) {
                     {notices && notices.map( (n) =>{
                         switch(n.object){
                             case 'friendAccepted':
-                                console.log("朋友接受")
                                 return(
                                     <div className="noticeMessage" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className="noticeMessageCotentLeft">
@@ -57,7 +84,6 @@ export default function Notice({notices}) {
                                     </div>
                                 )
                             case 'post':
-                                console.log("貼文")
                                 return(
                                     <div className="noticeMessage" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className="noticeMessageCotentLeft">
@@ -71,9 +97,8 @@ export default function Notice({notices}) {
                                     </div>
                                 )
                             case 'friendRequest':
-                                console.log("朋友邀請")
                                 return(
-                                    <div className="noticeMessageFriend" onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
+                                    <div className="noticeMessageFriend" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className ="noticeMessageFriendContent">
                                             <div className="noticeMessageCotentLeft">
                                                 <img src={n.senderPic!=="" ? n.senderPic : "https://i.imgur.com/HeIi0wU.png"} alt="" className="noticeImg" />
@@ -85,15 +110,16 @@ export default function Notice({notices}) {
                                             </div>
                                         </div>
                                         <div className= "noticeMessageFriendRequest">
-                                            <Button  style={{backgroundColor:"#1877F2",color:"white",marginRight:"20px"}}>確認</Button>
+                                            <Button  style={{backgroundColor:"#1877F2",color:"white",marginRight:"20px"}} onClick={(e)=>acceptFriendRequest(e,n)}>
+                                                {acceptLoading ? <CircularProgress color="white" size="20px"/> : "確認"}
+                                            </Button>
                                             <Button  style={{backgroundColor:"#E4E6EB"}}>刪除</Button>
                                         </div>
                                     </div>
                                 )
                             case 'message':
-                                console.log("訊息")
                                 return(
-                                    <div className="noticeMessage" onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
+                                    <div className="noticeMessage" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className="noticeMessageCotentLeft">
                                             <img src={n.senderPic!=="" ? n.senderPic : "https://i.imgur.com/HeIi0wU.png"} alt="" className="noticeImg" />
                                             <Chat htmlColor="white" className="noticeTypeImgMessage"/>
@@ -107,7 +133,7 @@ export default function Notice({notices}) {
                                 )
                             case 'comment':
                                 return(
-                                    <div className="noticeMessage" onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
+                                    <div className="noticeMessage" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className="noticeMessageCotentLeft">
                                             <img src={n.senderPic!=="" ? n.senderPic : "https://i.imgur.com/HeIi0wU.png"} alt="" className="noticeImg" />
                                             <Chat  htmlColor="white" className="noticeTypeImgPost"/>
@@ -121,7 +147,7 @@ export default function Notice({notices}) {
                                 )
                             case 'like':
                                 return(
-                                    <div className="noticeMessage" onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
+                                    <div className="noticeMessage" key={n._id} onClick={()=>handleLink(n)} style={n.read.includes(user._id) ?{color:"gray"}:{}}>
                                         <div className="noticeMessageCotentLeft">
                                             <img src={n.senderPic!=="" ? n.senderPic : "https://i.imgur.com/HeIi0wU.png"} alt="" className="noticeImg" />
                                             <Favorite  htmlColor="white" className="noticeTypeImgLike"/>

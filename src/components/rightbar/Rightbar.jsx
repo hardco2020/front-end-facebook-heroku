@@ -3,7 +3,8 @@ import './rightbar.css'
 import Online from '../online/Online'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Add, Remove } from '@material-ui/icons'
+import { Button,CircularProgress} from '@material-ui/core'
+import { PersonAdd,PersonAddDisabled,RecordVoiceOver} from '@material-ui/icons'
 import { useRef } from 'react'
 import {io} from 'socket.io-client'
 
@@ -15,21 +16,51 @@ export default function Rightbar({user}) {
     //console.log(currentUser)
     //const {dispatch,user:contextuser} = useContext(AuthContext)
     //此處是使用localstorage去做確認 等於說如果做更新了 要直接去修改裡面的資料
-    const [followed,setFollowed] = useState(currentUser.followings.includes(user?._id))
+    const [followed,setFollowed] = useState(currentUser.friends.includes(user?._id))
+    const [state,setState] = useState("")
+    const [stateIcon,setStateIcon] = useState("")
     const [onlineUsers,setOnlineUsers] = useState([]);
+    const [isLoading,setIsLoading] = useState(false);
     const socket = useRef();
-
+    useEffect(()=>{
+        if(user){
+            //狀態有三種 加入好友=> not friends && no pending 
+            // 邀請中 pending && no friends 
+            // 將pending改成雙向的？
+            const checkFriendAndPending = async()=>{
+                const resFriend = await axios.get("/api/users/friends/"+user._id)
+                const resPending = await axios.get("/api/users/pending/"+user._id)
+                const userFriends = resFriend.data.data
+                const isFriend = userFriends.find(friend=>{
+                   return friend._id === currentUser._id
+                })
+                if(!isFriend && resPending.data.data===null ){
+                    setState("加朋友")
+                    setStateIcon(<PersonAdd/>)
+                }
+                if(isFriend){
+                    setState("取消朋友")
+                    setStateIcon(<PersonAddDisabled/>)
+                }
+                if(!isFriend && resPending.data.data!==null){
+                    setState("邀請中")
+                    setStateIcon(<RecordVoiceOver/>)
+                }
+            }
+            checkFriendAndPending()
+        }
+    },[user?._id])
     useEffect(()=>{
         socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
         socket.current.emit("addUser",currentUser._id)
         socket.current.on("getUsers",users=>{
             setOnlineUsers(
-                currentUser.followings.filter((f)=> users.some((u)=>u.userId===f))
+                currentUser.friends.filter((f)=> users.some((u)=>u.userId===f))
             );
         })
     },[])
     useEffect(()=>{
-       setFollowed(currentUser.followings.includes(user?._id))
+       setFollowed(currentUser.friends.includes(user?._id))
     },[currentUser,user?._id])
     useEffect(()=>{
         //console.log(user?._id)
@@ -52,19 +83,39 @@ export default function Rightbar({user}) {
     const handleClick = async()=>{
         try{
             if(followed){
-                await axios.put("api/users/"+user._id+"/unfollow",null);
-                currentUser.followings = currentUser.followings.filter(follow=>follow!==user._id) 
+                setIsLoading(true)
+                await axios.put("api/users/unfriend/"+user._id,null);
+                currentUser.friends = currentUser.friends.filter(friend=>friend!==user._id) 
                 console.log(currentUser)
                 localStorage.setItem("user",JSON.stringify(currentUser))
             }else{
-                await axios.put("api/users/"+user._id+"/follow",null)
-                currentUser.followings = [...currentUser.followings,user._id]
-                console.log(currentUser)
-                localStorage.setItem("user",JSON.stringify(currentUser))
+                setIsLoading(true)
+                //發出朋友邀請 要發出pending的審核
+                const sendPending = async()=>{
+                    await axios.post('/api/users/pending/'+user._id)
+                }
+                const  sendNotice = async ()=>{
+                    const notice = {
+                        senderId : currentUser._id,
+                        object : "friendRequest",
+                        senderPic : currentUser.profilePicture,
+                        senderUsername : currentUser.username,
+                        receiverId: user._id
+                    }
+                    await axios.post('/api/notice',notice)
+                    window.location.reload()
+                }
+                await sendPending()
+                await sendNotice()
+                // await axios.put("api/users/friend/"+user._id,null)
+                // currentUser.friends = [...currentUser.friends,user._id]
+                // console.log(currentUser)
+                // localStorage.setItem("user",JSON.stringify(currentUser))
             }
         }catch(err){
             console.log(err)
         }
+        setIsLoading(false)
         setFollowed(!followed)
     } 
 
@@ -92,10 +143,17 @@ export default function Rightbar({user}) {
             <>
                 {/* 追蹤與否 */}
                 {user.username !== currentUser.username &&(
-                    <button className="rightbarFollowButton" onClick={handleClick}>
-                        {followed ? "Unfollow" : "Follow"}
-                        {followed ?  <Remove/> : <Add/>}
-                    </button>
+                    <Button 
+                        onClick={handleClick} 
+                        startIcon={isLoading? "" : stateIcon}
+                        style={{marginBottom:"10px",marginTop:"30px",fontSize:"16px",backgroundColor:"#007355",color:"white",alignItems:"center",padding:"8px 12px"}}
+                        disabled={isLoading || state==="邀請中"}
+                    >
+                        {isLoading 
+                                ?  <CircularProgress color="white" size="20px"/>
+                                : state
+                        }
+                    </Button>
 
                 )}
                 <h4 className="rightbarTitle">用戶資訊</h4>

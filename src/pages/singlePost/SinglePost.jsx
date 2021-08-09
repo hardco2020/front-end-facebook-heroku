@@ -12,12 +12,10 @@ export default function SinglePost() {
     useEffect(() => {
        const getPost = async()=>{
            const res = await axios.get('/api/posts/'+postId)
-           console.log(res.data.data)
            setPost(res.data.data)
        }
        getPost()
     }, [postId])
-    console.log(postId)
     return (
         <>
         <Topbar/>

@@ -39,7 +39,6 @@ export default function Feed({username}) {
         }else{
             const fetchPosts = async ()=>{
                 setPage(page+1)
-                console.log(page)
                 const res = username 
                 ? await axios.get("/api/posts/profile/"+ username+"/"+page )
                 : await axios.get("/api/posts/timeline/all/"+page)    

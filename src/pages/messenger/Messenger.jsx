@@ -42,19 +42,16 @@ export default function Messenger() {
         socket.current.emit("addUser",user._id)
         socket.current.on("getUsers",users=>{
             setOnlineUsers(
-                user.followings.filter((f)=> users.some((u)=>u.userId===f))
+                user.friends.filter((f)=> users.some((u)=>u.userId===f))
             );
         })
     },[])
     
     useEffect(()=>{
         if(currentChat){
-            console.log(currentChat)
             const getMessages = async()=>{
                 try{
                     const res = await axios.get('/api/messages/'+currentChat._id)
-                    console.log("到這")
-                    console.log(res.data.data)
                     setMessages(res.data.data)
                 }catch(err){
                     console.log(err)
@@ -161,8 +158,8 @@ export default function Messenger() {
                     <input placeholder="尋找朋友" className="chatMenuInput" type="text" />
 
                     {conversations.map((c)=>(
-                        <div onClick={()=>switchChat(c)}>
-                            <Conversation conversation={c} currentUser={user} key={c._id}/>
+                        <div onClick={()=>switchChat(c)} key={c._id}>
+                            <Conversation conversation={c} currentUser={user} />
                         </div>
                     ))}
                 </div>
