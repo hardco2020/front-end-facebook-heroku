@@ -5,9 +5,13 @@ import {format} from 'timeago.js'
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 export default function Notice({notices}) {
+    const [allNotices,setAllNotices] = useState(notices)
     const user = JSON.parse(localStorage.getItem("user"))
     const [acceptLoading,setAcceptLoading] =useState(false)
+    const [hasMore, setHasMore] = useState(true)
+    const [page ,setPage] = useState(1)
     const history = useHistory();
     const handleLink = (notice)=>{
         //要發送更改read的API      
@@ -61,14 +65,51 @@ export default function Notice({notices}) {
         }
         action()
     }
+    const fetchData = async()=>{
+        console.log("trigger")
+        const getNotification = async()=>{
+            try{
+                 const res = await axios('/api/notice/'+user._id+"/"+page)
+                 console.log(res.data.data)
+                 if(res.data.data.length===0){
+                     setHasMore(false)
+                 }
+                 
+                 setAllNotices (prevNotices=>{
+                     return([...prevNotices,...res.data.data])
+                 });
+                 console.log(notices)
+                 setPage(page+1)
+                 console.log(page)
+            }catch(err){
+                console.log(err)
+            }
+        } 
+        getNotification()
+    }
     return (
-        <div className="notice">
+        <div className="notice" id="scrollableDiv">
             <div className="noticeWrapper">
                 <div className="noticeTop">
                     <h1>通知</h1>
                 </div>
                 <div className="noticeCenter" >
-                    {notices && notices.map( (n) =>{
+                                
+                    <InfiniteScroll
+                        className="feedScrollbar"
+                        dataLength={allNotices.length} //This is important field to render the next data
+                        next={fetchData}
+                        hasMore={hasMore}
+                        loader={<div className="onLoading"><CircularProgress  size="20px"/></div>}
+                        endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b> "暫時沒有其他通知了！" </b>
+                        </p>
+                        }
+                        scrollThreshold="95%"
+                        scrollableTarget="scrollableDiv"
+                    >
+                    {allNotices && allNotices.map( (n) =>{
                         switch(n.object){
                             case 'friendAccepted':
                                 return(
@@ -175,6 +216,7 @@ export default function Notice({notices}) {
                                 )
                         }
                     })}
+                    </InfiniteScroll>
                 </div>
             </div>
         </div>

@@ -76,8 +76,9 @@
     flex:4;
     display:flex;
     align-items: center;
+    justify-content: center;
     /* 均匀排列每个元素 每个元素周围分配相同的空间 */
-    justify-content: space-around;
+    /* justify-content: space-around; */
     color:white
 }
 .topbarLink{
@@ -89,6 +90,7 @@
     display:flex;
 }
 .topbarIconItem{
+    margin-left:15px;
     margin-right:15px;
     cursor:pointer;
     /* badge到時候會是absolute 所以可以根據item去調配這些badge */

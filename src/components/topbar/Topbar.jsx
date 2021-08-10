@@ -16,15 +16,19 @@ export default function Topbar(){
     const [searching,setSearching] = useState(false);
     const [noticePopup,setNoticePopup] = useState(false)
     const [notices,setNotices] = useState(null)
+    const [newNotice,setNewNotice] = useState(null)
     const user = JSON.parse(localStorage.getItem("user"))
     const wrapperRef = useRef(null) //利用此點判斷滑鼠的落點區域
-
     //導入notification
     useEffect(()=>{
        const getNotification = async()=>{
            try{
-                const res = await axios('/api/notice/'+user._id)
+                const res = await axios('/api/notice/'+user._id+"/"+0)
                 setNotices(res.data.data)
+                console.log()
+                setNewNotice(res.data.data.reduce(function(n, val) {
+                    return n + (!val.read.includes(user._id));
+                }, 0))
            }catch(err){
                console.log(err)
            }
@@ -122,33 +126,30 @@ export default function Topbar(){
                         <Person/>
                         <span className="topbarIconBadge">1</span>
                     </div> */}
-                    <Link to={"/messenger"} style={{textDecoration:"none" ,color:"inherit"}}>
+                    {/* <Link to={"/messenger"} style={{textDecoration:"none" ,color:"inherit"}}>
                     <div className="topbarIconItem">
                         <Chat/>
-                        <span className="topbarIconBadge">1</span>
                     </div>
-                    </Link>
-                    <div className="topbarIconItem" onClick={()=>setNoticePopup(!noticePopup)}>
-                        <Notifications/>
-
-                        {
-                            //算出notices內 read= false的數量 
-                            notices && notices.reduce(function(n, val) {
-                            return n + (!val.read.includes(user._id));
-                            }, 0) ===0 ? "" :
-                            <span className="topbarIconBadge">{notices&&
-                                notices.reduce(function(n, val) {
-                                return n + (!val.read.includes(user._id));
-                                }, 0)}
-                            </span>
-                        }              
-                    </div>
+                    </Link> */}
+                    
                     {noticePopup &&(
                         <Notice notices = {notices} />
                  )}  
                 </div>
                 <div onClick={() => {window.location.href="/profile/"+user.username}}>
                 <img src={user.profilePicture ? user.profilePicture : "https://i.imgur.com/HeIi0wU.png"} alt="" className="topbarImg" />
+                </div>
+                <div className="topbarIconItem" onClick={()=>setNoticePopup(!noticePopup)}>
+                        <Notifications/>
+
+                        {
+                            //算出notices內 read= false的數量 
+                            newNotice!==0 && 
+                            <span className="topbarIconBadge">
+                                { newNotice }
+                            </span>
+                            
+                        }              
                 </div>
                 <div className="topbarIconItem">
                         <ExitToApp/>
