@@ -16,7 +16,7 @@ export default function Rightbar({user}) {
     //console.log(currentUser)
     //const {dispatch,user:contextuser} = useContext(AuthContext)
     //此處是使用localstorage去做確認 等於說如果做更新了 要直接去修改裡面的資料
-    const [followed,setFollowed] = useState(currentUser.friends.includes(user?._id))
+    const [followed,setFollowed] = useState(currentUser?.friends.includes(user?._id))
     const [state,setState] = useState("")
     const [stateIcon,setStateIcon] = useState("")
     const [onlineUsers,setOnlineUsers] = useState([]);
