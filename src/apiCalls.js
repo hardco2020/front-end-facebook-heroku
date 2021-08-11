@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import { decodeToken } from 'react-jwt';
+import jwt_decode from "jwt-decode";
 export const loginCall = async (userCredential,dispatch)=>{
     dispatch({type:"LOGIN_START"});
     try{
@@ -13,7 +14,9 @@ export const loginCall = async (userCredential,dispatch)=>{
             config.headers.Authorization = "Bearer "+res.data.data  ;
             return config;
         });
-        const user = decodeToken(res.data.data)
+        const user = jwt_decode(res.data.data)
+        console.log(res.data.data)
+        console.log(user)
         const user_data  = await axios.get(`/api/users?userId=${user._id}`)
         console.log(res.data.data)
         localStorage.setItem('token',res.data.data)
@@ -22,7 +25,7 @@ export const loginCall = async (userCredential,dispatch)=>{
         window.location.reload()
     }catch(e){
         if (e) {
-            console.log(e.response.data.message) // some reason error message
+            console.log(e) // some reason error message
           }
         dispatch({type:"LOGIN_FAILURE",payload:e});
     }

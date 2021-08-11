@@ -80,3 +80,10 @@
     font-weight: 500;
     cursor: pointer;    
 }
+.errorMessage{
+    margin: 10px;
+    color:red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

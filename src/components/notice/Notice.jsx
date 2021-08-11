@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useEffect } from 'react';
 export default function Notice({notices}) {
     const [allNotices,setAllNotices] = useState(notices)
     const user = JSON.parse(localStorage.getItem("user"))
@@ -13,6 +14,11 @@ export default function Notice({notices}) {
     const [hasMore, setHasMore] = useState(true)
     const [page ,setPage] = useState(1)
     const history = useHistory();
+    useEffect(() => {
+        if(notices.length===0){
+            setHasMore(false)
+        }
+    }, [notices])
     const handleLink = (notice)=>{
         //要發送更改read的API      
         //根據有沒有read過來決定會不會觸發
@@ -64,6 +70,7 @@ export default function Notice({notices}) {
             setAcceptLoading(false)
         }
         action()
+        window.location.reload()
     }
     const fetchData = async()=>{
         console.log("trigger")
