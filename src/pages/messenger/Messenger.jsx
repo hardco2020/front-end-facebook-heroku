@@ -7,21 +7,25 @@ import { useState,useEffect,useRef} from 'react'
 import axios from 'axios'
 import {io} from 'socket.io-client'
 import { useLocation } from 'react-router-dom'
-
-
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { CircularProgress } from '@material-ui/core'
+import { message } from 'statuses'
+import InfiniteScrollReverse from "react-infinite-scroll-reverse";
 export default function Messenger() {
     let location = useLocation();
     const user = JSON.parse(localStorage.getItem("user"))
     const [conversations,setConversations] = useState([]);
     const [currentChat,setCurrentChat] = useState(null);
     const [currentData,setCurrentData] = useState(null);
+    const [chatQuery,setChatQuery] = useState("m");
     const [messages,setMessages] = useState([]);
+    const [messagePage,setMessagePage] = useState(1);
+    const [messageHasMore,setMessageHasMore] = useState(true);
     const [onlineUsers,setOnlineUsers] = useState([]);
     const [arrivalMessage,setArrivalMessage] = useState(null);
     const newMessage = useRef("");
     const socket = useRef();
     const scrollRef = useRef();
-    
     useEffect(()=>{
         socket.current = io(process.env.REACT_APP_SOCKET_PORT) //此處要替換成測試andq上線port 
         socket.current.on("getMessage",data=>{
@@ -51,7 +55,7 @@ export default function Messenger() {
         if(currentChat){
             const getMessages = async()=>{
                 try{
-                    const res = await axios.get('/api/messages/'+currentChat._id)
+                    const res = await axios.get('/api/messages/'+currentChat._id+"/"+0)
                     setMessages(res.data.data)
                 }catch(err){
                     console.log(err)
@@ -149,14 +153,37 @@ export default function Messenger() {
         }
         getUser();
     }
+    const fetchMessageData = async()=>{
+        const getMessages = async()=>{
+            try{
+                 const res = await axios.get('/api/messages/'+currentChat._id+"/"+messagePage)
+                 console.log(res.data.data)
+                 if(res.data.data.length===0){
+                     setMessageHasMore(false)
+                 }
+                 
+                 setMessages(prevMessages=>{
+                     return([...prevMessages,...res.data.data])
+                 });
+                 console.log(messages)
+                 setMessagePage(messagePage+1)
+                 console.log(messagePage)
+            }catch(err){
+                console.log(err)
+            }
+        } 
+        getMessages()
+    }
     return (
         <>
         <Topbar/>
         <div className="messenger">
             <div className="chatMenu">
                 <div className="chatMenuWrapper">
-                    <input placeholder="尋找朋友" className="chatMenuInput" type="text" />
-
+                    {/* <input placeholder="尋找朋友" className="chatMenuInput" type="text" /> */}
+                    <h4 className="chatSidebarTitle">正在聊天的視窗</h4>
+                    <hr/>
+                    {/* 利用query作filter? */}
                     {conversations.map((c)=>(
                         <div onClick={()=>switchChat(c)} key={c._id}>
                             <Conversation conversation={c} currentUser={user} />
@@ -170,13 +197,27 @@ export default function Messenger() {
                         currentChat
                     ?    
                     <>
-                    <div className="chatBoxTop">
+                    <div className="chatBoxTop"  id="scrollableDiv" >
+                        {/* 此處加入infintite scroll */}
+                        {/* <InfiniteScroll
+                        dataLength={messages.length} //This is important field to render the next data
+                        next={()=>fetchMessageData()}
+                        hasMore={messageHasMore}
+                        loader={<div className="onLoading"><CircularProgress  size="20px"/></div>}
                         
+                        scrollableTarget="scrollableDiv"
+                        // endMessage={
+                        // <p style={{ textAlign: 'center' }}>
+                        //     <b> "暫時沒有其他通知了！" </b>
+                        // </p>
+                        // }
+                        > */}
                         {messages.map((m)=>(
                             <div ref={scrollRef} key={m._id} >
                             <Message message={m} own={m.sender === user._id} data={m.sender === user._id ?user:currentData} />
                             </div>
                         ))}
+                        {/* </InfiniteScroll> */}
                         
                     </div>
                     <div className="chatBoxBottom">
@@ -199,7 +240,8 @@ export default function Messenger() {
             </div>
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                <h4 className="rightbarTitle">正在線上的好友</h4>
+                <h4 className="chatSidebarTitle">正在線上的好友</h4>
+                <hr/>
                     <ChatOnline 
                         onlineUsers={onlineUsers} 
                         currentId={user._id} 
